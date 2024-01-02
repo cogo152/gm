@@ -1,0 +1,7 @@
+{
+  "cortex-debug.armToolchainPath.linux": "/usr/lib/arm-none-eabi/bin",
+  "cortex-debug.variableUseNaturalFormat": false,
+  "files.associations": {
+    "core.h": "c"
+  },
+}

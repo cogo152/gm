@@ -1,0 +1,16 @@
+{
+  "configurations": [
+    {
+      "name": "OpenOCD",
+      "cwd": "${workspaceRoot}",
+      "type": "cortex-debug",
+      "request": "launch",
+      "executable": "${workspaceRoot}/build/gm-kernel",
+      "gdbPath": "gdb-multiarch",
+      "servertype": "openocd",
+      "configFiles": ["${workspaceRoot}/test/STM32F411.cfg"],
+      "svdFile": "${workspaceRoot}/test/STM32F411.svd",
+      "showDevDebugOutput": "both",
+    }
+  ]
+}

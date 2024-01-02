@@ -1,0 +1,75 @@
+add_custom_command(
+        TARGET
+        ${LIB_OS}
+        POST_BUILD
+        COMMAND ${CMAKE_SIZE} ${LIB_OS}
+        COMMAND ${CMAKE_OBJDUMP} -S --disassemble ${LIB_OS} > ${LIB_OS}.list
+        COMMAND ${CMAKE_OBJCOPY} -O binary ${LIB_OS} ${LIB_OS}.bin
+        COMMAND ${CMAKE_OBJCOPY} -O ihex ${LIB_OS} ${LIB_OS}.hex
+        COMMAND ${CMAKE_OBJCOPY} -O srec --srec-len 0x10 ${LIB_OS} ${LIB_OS}.srec
+)
+
+-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
+
+-Wall -Wextra --assembler-with-cpp -nostdlib -T /home/cogo152/Projects/gproject/gm/gm-kernel/config
+
+
+cmake_minimum_required(VERSION 3.13)
+
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_SYSTEM_PROCESSOR ARM)
+
+if(DEFINED ENV{GCC_ARM_TOOLCHAIN})
+    set(GCC_ARM_TOOLCHAIN $ENV{GCC_ARM_TOOLCHAIN})
+else()
+    set(GCC_ARM_TOOLCHAIN "C:/Users/user/tools/gcc-arm-none-eabi-7-2018-q2-update-win32")
+endif()
+
+LIST(APPEND CMAKE_PROGRAM_PATH ${GCC_ARM_TOOLCHAIN})
+
+# Specify the cross compiler
+# The target triple needs to match the prefix of the binutils exactly
+# (e.g. CMake looks for arm-none-eabi-ar)
+set(CLANG_TARGET_TRIPLE arm-none-eabi)
+set(GCC_ARM_TOOLCHAIN_PREFIX ${CLANG_CLANG_TARGET_TRIPLE})
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_C_COMPILER_TARGET ${CLANG_TARGET_TRIPLE})
+set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_COMPILER_TARGET ${CLANG_TARGET_TRIPLE})
+set(CMAKE_ASM_COMPILER clang)
+set(CMAKE_ASM_COMPILER_TARGET ${CLANG_TARGET_TRIPLE})
+
+# Don't run the linker on compiler check
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+
+# Specify compiler flags
+set(ARCH_FLAGS "-mcpu=cortex-a5 -mthumb -mfpu=neon-vfpv4 -mfloat-abi=hard -mno-unaligned-access")
+set(CMAKE_C_FLAGS "-Wall ${ARCH_FLAGS}" CACHE STRING "Common flags for C compiler")
+set(CMAKE_CXX_FLAGS "-Wall -std=c++17 -fno-exceptions -fno-rtti -fno-threadsafe-statics ${ARCH_FLAGS}" CACHE STRING "Common flags for C++ compiler")
+set(CMAKE_ASM_FLAGS "-Wall ${ARCH_FLAGS} -x assembler-with-cpp" CACHE STRING "Common flags for assembler")
+set(CMAKE_EXE_LINKER_FLAGS "-nostartfiles -Wl,-Map,kernel.map,--gc-sections -fuse-linker-plugin -Wl,--use-blx --specs=nano.specs --specs=nosys.specs" CACHE STRING "")
+
+# C/C++ toolchain
+set(GCC_ARM_SYSROOT "${GCC_ARM_TOOLCHAIN}/${GCC_ARM_TOOLCHAIN_PREFIX}")
+# set(CMAKE_SYSROOT ${GCC_ARM_SYSROOT})
+set(CMAKE_FIND_ROOT_PATH ${GCC_ARM_SYSROOT})
+
+# Search for programs in the build host directories
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+# For libraries and headers in the target directories
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+
+
+extern "C"
+{
+    void __cxa_throw(void *thrownException, void *pvInfo, void (*dest)(void *))
+    {
+        std::cout << "cxa called" << std::endl;
+    }
+}
+
+gcmake_cxx_flags=-fno-exceptions -fno-rtti -fno-threadsafe-statics
+
+
+openocd -f interface/stlink.cfg -f board/stm32f4discovery.cfg -c init -c "reset halt" -c "flash write_image erase /home/cogo152/Downloads/glx-comm-master/gEmbedded-MOS/build/gMOS.bin  0x08000000 " -c "reset" -c shutdown

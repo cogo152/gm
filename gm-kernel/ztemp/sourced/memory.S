@@ -1,0 +1,20 @@
+    .syntax unified
+
+    #include "memory.h"
+
+GLOBAL_FUNCTION memoryCopy
+     cbz r2, memoryCopyExit
+     sub r2, r2, #0x01
+     ldrb r3, [r0,r2]
+     strb r3, [r1,r2]
+     b memoryCopy
+     memoryCopyExit:
+        bx lr
+
+GLOBAL_FUNCTION memoryFill
+     cbz r1, memoryFillExit
+     sub r1, r1, #0x01
+     strb r2, [r0,r1]
+     b memoryFill
+     memoryFillExit:
+        bx lr
