@@ -1,0 +1,4 @@
+1) (assembly) https://software-dl.ti.com/codegen/docs/tiarmclang/compiler_tools_user_guide/gnu_syntax_arm_asm_language/index.html#
+2) (gnu generic) https://gcc.gnu.org/onlinedocs/gcc/index.html
+2) (gcc command options) https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html
+3) (gcc arm options) https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
