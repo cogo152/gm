@@ -3,7 +3,8 @@
     "gmIncludePath": [
       "/usr/lib/arm-none-eabi/include",
       "${workspaceFolder}/include/**",
-      "${workspaceFolder}/source/**"
+      "${workspaceFolder}/source/**",
+      "${workspaceFolder}/test/**"
     ]
   },
   "configurations": [

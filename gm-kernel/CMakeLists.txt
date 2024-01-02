@@ -11,21 +11,16 @@ cmake_minimum_required(VERSION ${GCMAKE_CMAKE_VERSION})
 
 project(${GCMAKE_PROJECT_NAME} VERSION ${GCMAKE_PROJECT_VERSION} DESCRIPTION ${GCMAKE_PROJECT_DESCRIPTION})
 
-if(QEMU)
-    message(STATUS "Building for QEMU")
-    string(REPLACE "-nostdlib" "--specs=nano.specs --specs=rdimon.specs" new_cmake_exe_linker_flags "${CMAKE_EXE_LINKER_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS "${new_cmake_exe_linker_flags}")
-endif()
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS FALSE)
 set(CMAKE_VERBOSE_MAKEFILE FALSE)
 
-gcmake_add_executable(${GCMAKE_PROJECT_NAME})
+if(USE_NANO)
+    message(STATUS "Building with NANO")
+    string(REPLACE "-nostdlib" "--specs=nano.specs --specs=nosys.specs" new_cmake_exe_linker_flags "${CMAKE_EXE_LINKER_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${new_cmake_exe_linker_flags}")
+endif()
 
-target_include_directories(${GCMAKE_PROJECT_NAME}
-    PRIVATE 
-        ${CMAKE_SOURCE_DIR}/include/Inc
-)
+gcmake_add_executable(${GCMAKE_PROJECT_NAME})
 
 add_custom_command(
     TARGET
