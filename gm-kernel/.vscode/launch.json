@@ -10,6 +10,7 @@
       "servertype": "openocd",
       "configFiles": ["${workspaceRoot}/test/STM32F411.cfg"],
       "svdFile": "${workspaceRoot}/test/STM32F411.svd",
+      "runToEntryPoint": "System_Handler",
       "showDevDebugOutput": "both",
     }
   ]

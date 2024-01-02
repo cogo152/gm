@@ -1,7 +1,7 @@
 	.syntax	unified
 
 	#include "common.h"
-	#include "core.h"
+	#include "core_cpu.h"
 	#include "system.h"
 	#include "syscall.h"
 	
@@ -43,12 +43,12 @@ __HeapLimit:
 GLOBAL_FUNCTION System_Handler
 
     ldr r0, = __MSP
-    bl core_msp_set // Load kernel sp
+    bl cpu_msp_set // Load kernel sp
 
 	ldr r0, = __PSP
-	bl core_psp_set // Load user sp
+	bl cpu_psp_set // Load user sp
 
-	mov r0, 0x2 
+	movs r0, #0x2 
 	msr control, r0
     isb // use psp and flash
 
