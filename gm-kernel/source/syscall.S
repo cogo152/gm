@@ -14,9 +14,9 @@ GLOBAL_FUNCTION SVC_Handler
     ldrh r2, [r1]
     ldr r3, = 0xFF00
     bics r2, r2, r3
+    lsls r2, #1
 
     ldr r3, =jump_table
-    lsls r2, #1
     adds r3, r3, r2
     mov pc, r3
 
