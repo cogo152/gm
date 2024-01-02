@@ -1,0 +1,5 @@
+1) ST-LINK server -> https://www.st.com/en/development-tools/st-link-server.html
+2) ST-LINK boards firmware upgrade -> https://www.st.com/en/development-tools/stsw-link007.html
+3) openocd
+4) gdb multi-arch
+
