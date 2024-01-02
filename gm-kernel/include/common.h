@@ -8,7 +8,7 @@
 
 .macro GLOBAL_FUNCTION globalFunction
     .text
-    .align 2
+    .align 1
     .thumb
     .thumb_func
     .global \globalFunction  
@@ -18,7 +18,7 @@
 
 .macro STATIC_FUNCTION staticFunction
     .text
-    .align 2
+    .align 1
     .thumb
     .thumb_func
     .type \staticFunction,% function
@@ -27,7 +27,7 @@
 
 .macro WEAK_FUNCTION weakFunction
     .text
-    .align 2
+    .align 1
     .thumb
     .thumb_func   
     .global \weakFunction
