@@ -1,5 +1,3 @@
-    .syntax unified
-
 #include "core_cpu.h"
 
 GLOBAL_FUNCTION cpu_msp_set

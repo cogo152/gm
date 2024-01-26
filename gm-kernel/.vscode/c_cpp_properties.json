@@ -4,7 +4,7 @@
       "/usr/lib/arm-none-eabi/include",
       "${workspaceFolder}/include/**",
       "${workspaceFolder}/source/**",
-      "${workspaceFolder}/test/**"
+      "${workspaceFolder}/device/**"
     ]
   },
   "configurations": [
@@ -18,8 +18,8 @@
         "path": ["${gmIncludePath}"],
         "limitSymbolsToIncludedHeaders": true
       },
-      "cStandard": "gnu11",
-      "cppStandard": "gnu++20"
+      "cStandard": "gnu23",
+      "cppStandard": "gnu++23"
     }
   ],
   "version": 4

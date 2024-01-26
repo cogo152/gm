@@ -1,5 +1,8 @@
 {
-  "cmake.configureArgs": ["-Wno-dev"],
+  "cmake.configureArgs": [
+    "-Wno-dev",
+    "-DOWN_TEST:BOOL=TRUE"
+  ],
   "cortex-debug.armToolchainPath.linux": "/usr/lib/arm-none-eabi/bin",
-  "cortex-debug.variableUseNaturalFormat": false
+  "cortex-debug.variableUseNaturalFormat": false,
 }

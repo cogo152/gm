@@ -1,107 +1,68 @@
-	.syntax	unified
-
-	#include "common.h"
-	#include "core_cpu.h"
-	#include "system.h"
-	#include "syscall.h"
-	
-	.section .stack
-	.align	3
-#ifdef __STACK_SIZE
-	.equ	Stack_Size, __STACK_SIZE
-#else
-	.equ	Stack_Size, 0xc00
-#endif
-	.globl	__StackTop
-	.globl	__StackLimit
-__StackLimit:
-	.space	Stack_Size
-	.size	__StackLimit, . - __StackLimit
-__StackTop:
-	.size	__StackTop, . - __StackTop
-
-	.section .heap
-	.align	3
-#ifdef __HEAP_SIZE
-	.equ	Heap_Size, __HEAP_SIZE
-#else
-	.equ	Heap_Size, 0
-#endif
-	.globl	__HeapBase
-	.globl	__HeapLimit
-__HeapBase:
-	.if	Heap_Size
-	.space	Heap_Size
-	.endif
-	.size	__HeapBase, . - __HeapBase
-__HeapLimit:
-	.size	__HeapLimit, . - __HeapLimit
-
-
-// System_Handler block
-
-GLOBAL_FUNCTION System_Handler
-
-    ldr r0, = __MSP
-    bl cpu_msp_set // Load kernel sp
-
-	ldr r0, = __PSP
-	bl cpu_psp_set // Load user sp
-
-	movs r0, #0x2 
-	msr control, r0
-    isb // use psp and flash
-
-	// copy data
-	ldr	r1, =__etext
-	ldr	r2, =__data_start__
-	ldr	r3, =__data_end__
-	subs	r3, r2
-	ble	.L_loop1_done
-.L_loop1:
-	subs	r3, #4
-	ldr	r0, [r1,r3]
-	str	r0, [r2,r3]
-	bgt	.L_loop1
-.L_loop1_done:
-
-	// zero bss
-	ldr	r1, =__bss_start__
-	ldr	r2, =__bss_end__
-	movs	r0, 0
-	subs	r2, r1
-	ble	.L_loop3_done
-.L_loop3:
-	subs	r2, #4
-	str	r0, [r1, r2]
-	bgt	.L_loop3
-.L_loop3_done:
-
-	svc #SVC_SYSTEM_START
-
-	bl _start 
-
-	bl _stop
-
-	svc #SVC_SYSTEM_STOP
-
-	b halt
-
-// unprivillaged
-WEAK_FUNCTION _start
-	push {lr}
-	bl main
-	pop {pc}
-
-// unprivillaged
-WEAK_FUNCTION _stop
-	nop
-	bx lr
-
-// must be in privilaged thread mode
-halt :
-	b .
-
-GLOBAL_FUNCTION Alias_Vector_Handler
-	b .
-	
+    .section .boot,"a"
+    .global _boot
+    .type _boot,%object
+_boot:
+    .word 0x4b32b500
+    .word 0x60582021
+    .word 0x21026898
+    .word 0x60984388
+    .word 0x611860d8
+    .word 0x4b2e6158
+    .word 0x60992100
+    .word 0x61592102
+    .word 0x22f02101
+    .word 0x492b5099
+    .word 0x21016019
+    .word 0x20356099
+    .word 0xf844f000
+    .word 0x42902202
+    .word 0x2106d014
+    .word 0xf0006619
+    .word 0x6e19f834
+    .word 0x66192101
+    .word 0x66182000
+    .word 0xf000661a
+    .word 0x6e19f82c
+    .word 0x6e196e19
+    .word 0xf0002005
+    .word 0x2101f82f
+    .word 0xd1f94208
+    .word 0x60992100
+    .word 0x6019491b
+    .word 0x60592100
+    .word 0x481b491a
+    .word 0x21016001
+    .word 0x21eb6099
+    .word 0x21a06619
+    .word 0xf0006619
+    .word 0x2100f812
+    .word 0x49166099
+    .word 0x60014814
+    .word 0x60992101
+    .word 0x2800bc01
+    .word 0x4700d000
+    .word 0x49134812
+    .word 0xc8036008
+    .word 0x8808f380
+    .word 0xb5034708
+    .word 0x20046a99
+    .word 0xd0fb4201
+    .word 0x42012001
+    .word 0xbd03d1f8
+    .word 0x6618b502
+    .word 0xf7ff6618
+    .word 0x6e18fff2
+    .word 0xbd026e18
+    .word 0x40020000
+    .word 0x18000000
+    .word 0x00070000
+    .word 0x005f0300
+    .word 0x00002221
+    .word 0x180000f4
+    .word 0xa0002022
+    .word 0x10000100
+    .word 0xe000ed08
+    .word 0x00000000
+    .word 0x00000000
+    .word 0x00000000
+    .word 0x7a4eb274

@@ -7,6 +7,7 @@
 #ifdef __ASSEMBLER__
 
 .macro GLOBAL_FUNCTION globalFunction
+	.syntax	unified
     .text
     .align 1
     .thumb
@@ -17,6 +18,7 @@
 .endm
 
 .macro STATIC_FUNCTION staticFunction
+	.syntax	unified
     .text
     .align 1
     .thumb
@@ -26,6 +28,7 @@
 .endm
 
 .macro WEAK_FUNCTION weakFunction
+	.syntax	unified
     .text
     .align 1
     .thumb
@@ -36,9 +39,10 @@
     \weakFunction :
 .endm
 
-.macro ALIAS_FUNCTION vectorFunction
+.macro DEFAULT_HANDLER vectorFunction
+	.syntax	unified
     .weak \vectorFunction
-    .thumb_set \vectorFunction, Alias_Vector_Handler
+    .thumb_set \vectorFunction, Stop_Handler
 .endm
 
 #else
