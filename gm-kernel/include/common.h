@@ -7,7 +7,7 @@
 #ifdef __ASSEMBLER__
 
 .macro GLOBAL_FUNCTION globalFunction
-    .syntax	unified
+    .syntax unified
     .text
     .align 1
     .thumb
@@ -18,7 +18,7 @@
 .endm
 
 .macro STATIC_FUNCTION staticFunction
-    .syntax	unified
+    .syntax unified
     .text
     .align 1
     .thumb
@@ -28,7 +28,7 @@
 .endm
 
 .macro WEAK_FUNCTION weakFunction
-    .syntax	unified
+    .syntax unified
     .text
     .align 1
     .thumb
@@ -40,7 +40,7 @@
 .endm
 
 .macro DEFAULT_HANDLER vectorFunction
-    .syntax	unified
+    .syntax unified
     .weak \vectorFunction
     .thumb_set \vectorFunction, Stop_Handler
 .endm
