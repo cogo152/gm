@@ -1,0 +1,76 @@
+#ifndef BMCXXABI_TYPEINFO_INCLUDED
+#define BMCXXABI_TYPEINFO_INCLUDED
+
+namespace __cxxabiv1
+{
+  class __class_type_info;
+  class __pointer_type_info;
+}
+
+namespace std
+{
+
+  class type_info
+  {
+  public:
+    virtual ~type_info();
+
+    // The ABI document is a little vague on equality. It does suggest that the intention is
+    // mostly that type_info identity is equality, but incomplete types may need to be compared
+    // by __type_name (though comparison of this by pointer value should be sufficient). I suspect
+    // in practice that type_info identity alone is always enough, but let's play safe.
+    bool operator==(const type_info &other) const noexcept { return this == &other || this->__type_name == other.__type_name; }
+    bool operator!=(const type_info &other) const noexcept { return this != &other && this->__type_name != other.__type_name; }
+
+    bool before(const type_info &other) const noexcept { return __type_name < other.__type_name; }
+    const char *name() const noexcept { return __type_name; }
+
+    // We can add virtual functions for implementation of runtime support including dynamic_cast
+    // and catching exceptions. We'll (somewhat) follow the lead from GCC here, with __do_catch and
+    // __do_upcast functions.
+
+    // Test whether a "catch" clause with *this* type can catch the specified thrown type. The object
+    // pointer (thrown_obj) may be adjusted to point to the appropriate base if return is true.
+    // "outer indicates the number of outer pointers, and whether they were const qualified".
+    // specifically, the number of outer pointers is the number of pointers already matched; bits 1+
+    // give this number and bit 0 indicates whether all pointers for *this* type have so far been
+    // const-qualified. The initial call should be with outer = 1 (0 outers, all const-qualified).
+    //
+    // Knowing const-qualification of outer pointers is necessary to determine whether it is valid to
+    // perform qualification conversion, since if this pointer is "overqualified" at any point compared
+    // to the other pointer it can still match, but only if all outer pointers are const-qualified.
+    // (C++17 7.5 Qualification Conversions).
+    //
+    // eg "char **" can be converted to "const char * const *" but
+    // not to "const char **". Or in english:
+    //     ptr to ptr to char can be converted to ptr to const ptr to const char
+    //   but
+    //     cannot be coverted to ptr to ptr to const char
+    //
+    // On entry, (*__throw_obj) points to the thrown object. This value will be adjusted (if necessary) to
+    // point at the base class subobject. If called for a pointer type (with outer == 1), it will first be
+    // adapted to the thrown pointer value (i.e. the thrown pointer value is retrieved from the object)
+    // which matches the expectations of the handler landing pad.
+    //
+    // Return is true if a catch clause with this type can catch the thrown type; false otherwise
+    // (*__thrown_obj may be altered even if return is false).
+    virtual bool __do_catch(const type_info *__thrown_type, void **__thrown_obj, unsigned __outer) const noexcept;
+
+    // Upcast (cast to base) if possible. The given object pointer may be adjusted to correctly
+    // point at the base class subobject.
+    virtual bool __do_upcast(const __cxxabiv1::__class_type_info *__target_type, void **__obj_ptr) const noexcept;
+
+    // If this type_info represents a pointer type, return this as __pointer_type_info* (otherwise nullptr).
+    virtual const __cxxabiv1::__pointer_type_info *__as_pointer_type() const noexcept;
+
+  protected:
+    const char *__type_name;
+
+  private:
+    type_info(const type_info &rhs) = delete;
+    type_info &operator=(const type_info &rhs) = delete;
+  };
+
+} // namespace std
+
+#endif /* BMCXXABI_TYPEINFO_INCLUDED */

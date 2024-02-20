@@ -1,22 +1,9 @@
 #include "common.h"
 #include "core_cpu.h"
-#include "syscall.h"
+#include "system.h"
 
 GLOBAL_FUNCTION Start_Handler
     
-	ldr r0, = __MSP
-    msr msp, r0
-    isb
-
-	ldr r0, = __PSP
-	msr psp, r0
-    isb
-
-	movs r0, #0x2 
-	msr control, r0
-    isb // use psp
-
-    // copy data
 	ldr	r1, =__data_load__
 	ldr	r2, =__data_start__
 	ldr	r3, =__data_end__
@@ -29,7 +16,6 @@ GLOBAL_FUNCTION Start_Handler
 	bgt	.L_loop1
 .L_loop1_done:
 
-	// zero bss
 	ldr	r1, =__bss_start__
 	ldr	r2, =__bss_end__
 	movs	r0, 0
@@ -41,13 +27,13 @@ GLOBAL_FUNCTION Start_Handler
 	bgt	.L_loop3
 .L_loop3_done:
 
-	svc #SVC_SYSTEM_START
+	bl system_start
 
 	bl _start 
 
 	bl _stop
 
-	svc #SVC_SYSTEM_STOP
+	bl system_stop
 
 	b halt
 

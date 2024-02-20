@@ -1,15 +1,8 @@
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#ifndef SYSTEM_HPP
+#define SYSTEM_HPP
 
-#include "common.h"
+#include <stdint.h>
 
-#ifdef __ASSEMBLER__
-
-.extern system_start_enable
-.extern system_start
-.extern system_stop
-.extern system_stop_disable
-#else
 struct CPUID_t
 {
     uintptr_t revision_r : 4;
@@ -153,12 +146,7 @@ struct ST_t
     struct STK_CALIB_t STK_CALIB; // Privileged
 };
 
-#define PRIORITY_0 (0X00U)
-#define PRIORITY_1 (0X01U)
-#define PRIORITY_2 (0X02U)
-#define PRIORITY_3 (0X03U)
-
-#define AHB_CLOCK_SPEED (16000000U)
+#define AHB_CLOCK_SPEED (1600000000U)
 #define SEC (AHB_CLOCK_SPEED)
 #define MIL_SEC (SEC / 1000U)
 #define MIC_SEC (MIL_SEC / 1000U)
@@ -169,12 +157,5 @@ struct ST_t
 
 #define SCB ((volatile struct SCB_t *)(0xE000ED00))
 #define ST ((volatile struct ST_t *)(0xE000E010))
-
-extern void system_start_enable(void);
-extern void system_start(void);
-extern void system_stop(void);
-extern void system_start_disable();
-
-#endif
 
 #endif // SYSTEM_H

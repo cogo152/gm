@@ -24,10 +24,6 @@ static void stop_exceptions()
 {
 }
 
-void system_start_enable(void)
-{
-
-}
 
 void system_start()
 {
@@ -37,9 +33,4 @@ void system_start()
 void system_stop()
 {
     stop_exceptions();
-}
-
-void system_stop_disable(void)
-{
-    
 }

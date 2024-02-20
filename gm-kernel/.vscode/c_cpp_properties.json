@@ -1,22 +1,21 @@
 {
   "env": {
     "gmIncludePath": [
-      "/usr/lib/arm-none-eabi/include",
       "${workspaceFolder}/include/**",
       "${workspaceFolder}/source/**",
-      "${workspaceFolder}/device/**"
+      "/home/cogo152/Projects/gproject/tools/gcc/arm-none-eabi/include/**"
     ]
   },
   "configurations": [
     {
       "name": "arm",
-      "compilerPath": "/usr/bin/arm-none-eabi-gcc",
+      "compilerPath": "/home/cogo152/Projects/gproject/tools/gcc/bin/arm-none-eabi-gcc",
       "intelliSenseMode": "gcc-arm",
       "configurationProvider": "ms-vscode.cmake-tools",
       "includePath": ["${gmIncludePath}"],
       "browse": {
         "path": ["${gmIncludePath}"],
-        "limitSymbolsToIncludedHeaders": true
+        "limitSymbolsToIncludedHeaders": false
       },
       "cStandard": "gnu23",
       "cppStandard": "gnu++23"

@@ -5,12 +5,13 @@
       "cwd": "${workspaceRoot}",
       "type": "cortex-debug",
       "request": "launch",
-      "executable": "${workspaceRoot}/build/gm-kernel",
+      "executable": "${workspaceRoot}/build/gm-kernel_test",
       "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
       "servertype": "openocd",
       "configFiles": ["interface/cmsis-dap.cfg", "target/rp2040.cfg"],
       "openOCDLaunchCommands": ["adapter speed 5000"],
       "gdbPath": "gdb-multiarch",
+      "preLaunchCommands": ["monitor arm semihosting enable"],
       "runToEntryPoint": "Start_Handler",
       "showDevDebugOutput": "raw"
     }

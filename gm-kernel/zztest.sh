@@ -11,5 +11,5 @@ cmake   --no-warn-unused-cli            \
         -G "Unix Makefiles"             \
 
 cmake   --build build                   \
-        --target all                    \
+        --target all test               \
         -j 14 --
