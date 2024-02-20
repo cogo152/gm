@@ -27,6 +27,42 @@ extern "C"
     char *__env[1] = {0};
     char **environ = __env;
 
+    __attribute__((weak)) void _start()
+    {
+        auto *bssStart = &__bss_start__;
+        auto *bssEnd = &__bss_end__;
+        while (bssStart < bssEnd)
+        {
+            *bssStart++ = 0;
+        }
+
+        auto arrayStart = __preinit_array_start;
+        auto arrayEnd = __preinit_array_end;
+        while (arrayStart < arrayEnd)
+        {
+            (*arrayStart++)();
+        }
+
+        arrayStart = __init_array_start;
+        arrayEnd = __init_array_end;
+        while (arrayStart < arrayEnd)
+        {
+            (*arrayStart++)();
+        }
+
+        int status = main();
+
+        arrayStart = __fini_array_start;
+        arrayEnd = __fini_array_end;
+        while (arrayStart < arrayEnd)
+        {
+            (*arrayStart++)();
+        }
+
+        void _exit(int);
+        _exit(status);
+    }
+
     __attribute__((weak)) void _exit(int status)
     {
     }

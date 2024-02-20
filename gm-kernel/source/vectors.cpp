@@ -29,42 +29,6 @@ extern int main();
 
 extern "C"
 {
-    __attribute__((weak)) void _start()
-    {
-        auto *bssStart = &__bss_start__;
-        auto *bssEnd = &__bss_end__;
-        while (bssStart < bssEnd)
-        {
-            *bssStart++ = 0;
-        }
-
-        auto arrayStart = __preinit_array_start;
-        auto arrayEnd = __preinit_array_end;
-        while (arrayStart < arrayEnd)
-        {
-            (*arrayStart++)();
-        }
-
-        arrayStart = __init_array_start;
-        arrayEnd = __init_array_end;
-        while (arrayStart < arrayEnd)
-        {
-            (*arrayStart++)();
-        }
-
-        int status = main();
-
-        arrayStart = __fini_array_start;
-        arrayEnd = __fini_array_end;
-        while (arrayStart < arrayEnd)
-        {
-            (*arrayStart++)();
-        }
-
-        void _exit(int);
-        _exit(status);
-    }
-
     __attribute__((naked)) void Start_Handler()
     {
         auto *dataLoad = &__data_load__;
@@ -75,7 +39,7 @@ extern "C"
             *dataStart++ = *dataLoad++;
         }
 
-        void _start();
+        extern void _start();
 
         _start();
     }
@@ -132,7 +96,6 @@ extern "C"
 
     void Exit_Handler()
     {
-        printf("Exit_Handler \n");
         while (true)
             ;
     }
