@@ -3,13 +3,13 @@
     "gmIncludePath": [
       "${workspaceFolder}/include/**",
       "${workspaceFolder}/source/**",
-      "/home/cogo152/Projects/gproject/tools/gcc/arm-none-eabi/include/**"
+      "/usr/lib/arm-none-eabi/include/**"
     ]
   },
   "configurations": [
     {
       "name": "arm",
-      "compilerPath": "/home/cogo152/Projects/gproject/tools/gcc/bin/arm-none-eabi-gcc",
+      "compilerPath": "/usr/bin/arm-none-eabi-gcc",
       "intelliSenseMode": "gcc-arm",
       "configurationProvider": "ms-vscode.cmake-tools",
       "includePath": ["${gmIncludePath}"],

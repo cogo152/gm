@@ -1,36 +1,11 @@
-#include "cpu.hpp"
-
-#include <stdio.h>
-
-using void_func_t = void(void);
-
-extern unsigned __msp_end__;
-extern unsigned __psp_end__;
-
-extern unsigned __data_load__;
-extern unsigned __data_start__;
-extern unsigned __data_end__;
-
-extern unsigned __bss_start__;
-extern unsigned __bss_end__;
-
-extern void_func_t *__preinit_array_start[];
-extern void_func_t *__preinit_array_end[];
-
-extern void_func_t *__init_array_start[];
-extern void_func_t *__init_array_end[];
-
-extern void_func_t *__fini_array_start[];
-extern void_func_t *__fini_array_end[];
-
-extern int main();
-
-#include <csignal>
-
 extern "C"
 {
-    __attribute__((naked)) void Start_Handler()
+    void Start_Handler()
     {
+        extern unsigned __data_load__;
+        extern unsigned __data_start__;
+        extern unsigned __data_end__;
+
         auto *dataLoad = &__data_load__;
         auto *dataStart = &__data_start__;
         auto *dataEnd = &__data_end__;
@@ -44,64 +19,39 @@ extern "C"
         _start();
     }
 
-    void NMI_Handler()
-    {
-        printf("NMI_Handler \n");
-        std::raise(SIGKILL);
-    }
-
-    void HardFault_Handler()
-    {
-        printf("HardFault_Handler \n");
-        std::raise(SIGKILL);
-    }
-
-    void MemManage_Handler()
-    {
-        printf("MemManage_Handler \n");
-        std::raise(SIGKILL);
-    }
-
-    void BusFault_Handler()
-    {
-        printf("BusFault_Handler \n");
-        std::raise(SIGKILL);
-    }
-
-    void UsageFault_Handler()
-    {
-        printf("UsageFault_Handler \n");
-        std::raise(SIGKILL);
-    }
-    void SVC_Handler()
-    {
-        printf("SVC_Handler \n");
-    }
-
-    void DebugMon_Handler()
-    {
-        printf("DebugMon_Handler \n");
-        std::raise(SIGKILL);
-    }
-
-    void PendSV_Handler()
-    {
-        printf("PendSV_Handler \n");
-    }
-
-    void SysTick_Handler(void)
-    {
-        printf("SysTick_Handler \n");
-    }
-
     void Exit_Handler()
     {
-        while (true)
-            ;
+        extern void _exit(int);
+
+        _exit(99);
     }
+
+    extern void Reserved() __attribute__((weak, alias("Exit_Handler"))); // delete later
+
+    extern void NMI_Handler() __attribute__((weak, alias("Exit_Handler")));
+
+    extern void HardFault_Handler() __attribute__((weak, alias("Exit_Handler")));
+
+    extern void MemManage_Handler() __attribute__((weak, alias("Exit_Handler")));
+
+    extern void BusFault_Handler() __attribute__((weak, alias("Exit_Handler")));
+
+    extern void UsageFault_Handler() __attribute__((weak, alias("Exit_Handler")));
+
+    extern void SVC_Handler() __attribute__((weak, alias("Exit_Handler")));
+
+    extern void DebugMon_Handler() __attribute__((weak, alias("Exit_Handler")));
+
+    extern void PendSV_Handler() __attribute__((weak, alias("Exit_Handler")));
+
+    extern void SysTick_Handler() __attribute__((weak, alias("Exit_Handler")));
 }
 
-static void_func_t *VectorTable[] __attribute__((section(".vectors"), used)){
+using void_func_t = void(void);
+
+extern unsigned __msp_end__;
+
+void_func_t *VectorTable[] __attribute__((section(".vectors"), used)){
     reinterpret_cast<void_func_t *>(&__msp_end__),
     Start_Handler,
     NMI_Handler,
@@ -109,13 +59,14 @@ static void_func_t *VectorTable[] __attribute__((section(".vectors"), used)){
     MemManage_Handler,
     BusFault_Handler,
     UsageFault_Handler,
-    Exit_Handler,
-    Exit_Handler,
-    Exit_Handler,
-    Exit_Handler,
+    Reserved,
+    Reserved,
+    Reserved,
+    Reserved,
     SVC_Handler,
     DebugMon_Handler,
-    Exit_Handler,
+    Reserved,
     PendSV_Handler,
     SysTick_Handler,
+    // Add IRQs later. It can be device spesific
 };

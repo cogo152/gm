@@ -1,13 +1,8 @@
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#ifndef SYSTEM_HPP
+#define SYSTEM_HPP
 
-#include "common.h"
+#include "common.hpp"
 
-#ifdef __ASSEMBLER__
-
-.extern configureSystem
-
-#else
 struct CPUID_t
 {
     uintptr_t revision_r : 4;
@@ -160,11 +155,4 @@ struct ST_t
 #define CLOCK_SOURCE_AHB (0X1U)
 #define CLOCK_SOURCE_AHB8 (0X0)
 
-#define SCB ((volatile struct SCB_t *)(0xE000ED00))
-#define ST ((volatile struct ST_t *)(0xE000E010))
-
-extern void configureSystem(void);
-
-#endif
-
-#endif // SYSTEM_H
+#endif // SYSTEM_HPP

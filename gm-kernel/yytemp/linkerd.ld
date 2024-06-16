@@ -6,10 +6,16 @@
  *   RAM.LENGTH: length of RAM bank 0
  */
 
-MEMORY
+MEMORY // pico
 {
     FLASH(xr)   : ORIGIN = 0x10000000, LENGTH = 2048K
     RAM(xrw)    : ORIGIN = 0x20000000, LENGTH = 256K
+}
+
+MEMORY // semohost qemu
+{
+    FLASH(xr)   : ORIGIN = 0x00000000, LENGTH = 512K
+    RAM(xrw)    : ORIGIN = 0x20000000, LENGTH = 64K
 }
 
 /* Linker script to place sections and symbol values. Should be used together
